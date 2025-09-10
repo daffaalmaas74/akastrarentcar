@@ -1,0 +1,465 @@
+<?php
+session_start();
+
+// Cek jika admin sudah login, jika tidak arahkan ke login.php
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: ../login-admin.php");
+    exit();
+}
+
+// Jika admin sudah login, lanjutkan ke halaman ini
+// Ambil informasi session admin
+$admin_id = $_SESSION['admin_id'];
+$admin_nama = $_SESSION['nama_admin'];  // Mengambil nama admin dari session
+
+// Koneksi ke database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "akastrarentcar";
+$port = 3307;
+
+// Membuat koneksi
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+// Cek koneksi
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query untuk mengambil data dari tabel reservasi dan user_account
+$sql = "
+    SELECT r.id_reservation, u.nama_user, u.no_telp_user, r.merk_mobil, r.durasi, r.tanggal_rental_mulai, r.tanggal_rental_berakhir, r.total_harga, r.bukti_pembayaran, r.bukti_serah_terima, r.status_sewa
+    FROM reservasi r
+    JOIN user_account u ON r.id_user = u.id_user
+    WHERE r.status_sewa IN ('berjalan', 'telah selesai')
+";
+$result = $conn->query($sql);
+
+// Menutup koneksi
+$conn->close();
+?>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Admin AkastraRentCar - List Penyewa</title>
+    <link href="../img/logo.jpg" rel="icon">
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <style>
+        .car-image {
+    width: 100px;  /* Ukuran lebar thumbnail */
+    height: 60px;  /* Ukuran tinggi thumbnail */
+    object-fit: cover;  /* Menjaga rasio aspek dan memotong gambar jika perlu */
+}
+    </style>
+
+</head>
+
+<body id="page-top">
+
+   <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+                <div class="sidebar-brand-text mx-3">AkastraRent Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.php">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Interface
+            </div>
+
+            
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item active">
+                <a class="nav-link" href="list-penyewa.php">
+                     <i class="fas fa-fw fa-list-alt"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>List Penyewa</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="list-kendaraan.php">
+                     <i class="fas fa-fw fa-car"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>List Kendaraan</span></a>
+            </li>
+                     <li class="nav-item">
+                <a class="nav-link" href="reservasi-pending.php">
+                     <i class="fas fa-fw fa-clock"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>Reservasi Pending</span></a>
+            </li>
+                        <li class="nav-item">
+                <a class="nav-link" href="list-reservasi.php">
+                     <i class="fas fa-fw fa-list"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>List reservasi</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="dokumen-penyewa.php">
+                     <i class="fas fa-fw fa-file-alt"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>Dokumen Penyewa</span></a>
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="list-akun-user.php">
+                     <i class="fas fa-fw fa-user"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>List Akun User</span></a>
+            </li>
+                        <li class="nav-item">
+                <a class="nav-link" href="list-akun-admin.php">
+                     <i class="fas fa-fw fa-user"></i> <!-- Ganti dengan ikon mobil -->
+                    <span>List Akun Admin</span></a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="list-testimonial.php">
+                    <i class="fas fa-fw fa-comments"></i>
+                    <span>Testimoni</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+<li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="mr-2 d-lg-inline text-gray-600 small"><?php echo $admin_nama; ?></span> <!-- Menampilkan nama admin -->
+        <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+    </a>
+    <!-- Dropdown - User Information -->
+    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+        <a class="dropdown-item" href="info-akun.php">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Profile
+        <div class="dropdown-divider"></div>
+<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+    Logout
+</a>
+    </div>
+</li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+               <!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h4 class="m-0 font-weight-bold text-primary text-center">List Penyewa</h4>
+            <br>
+        </div>
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between flex-wrap">
+            <div class="d-flex flex-wrap justify-content-start">
+                <a href="export_pdf.php" class="btn btn-success btn-sm mb-2">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table  table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Nama User</th>
+                            <th class="text-center">Phone Number</th>
+                            <th class="text-center">Merk Mobil</th>
+                            <th class="text-center">Durasi</th>
+                            <th class="text-center">Tanggal Mulai Sewa</th>
+                            <th class="text-center">Tanggal Berakhir Sewa</th>
+                            <th class="text-center">Sisa Durasi</th>
+                            <th class="text-center">Total Harga</th>
+                            <th class="text-center">Bukti Pembayaran</th>
+                            <th class="text-center">Bukti Serah Terima Kendaraan</th>
+                            <th class="text-center">Status Sewa</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        $no = 1;
+                        while ($row = $result->fetch_assoc()) {
+                            // Initialize the variables
+                            $sisa_durasi = "";
+                            $status_sewa = $row['status_sewa'];
+                            
+                            // Cek apakah status sewa sudah selesai atau belum
+                            if ($status_sewa == 'telah selesai') {
+                                $sisa_durasi = "-";
+                            } else {
+                                $tanggal_mulai = new DateTime($row['tanggal_rental_mulai']);
+                                $tanggal_berakhir = new DateTime($row['tanggal_rental_berakhir']);
+                                
+                                // Menghitung sisa durasi atau terlambat
+                                $sekarang = new DateTime(); // Waktu sekarang
+                                if ($sekarang > $tanggal_berakhir) {
+                                    $terlambat = $sekarang->diff($tanggal_berakhir)->days; // Menghitung hari terlambat
+                                    $sisa_durasi = "Terlambat " . $terlambat . " hari";
+                                    $status_sewa = "belum mengembalikan"; // Update status sewa jika terlambat
+                                } else {
+                                    // Menghitung sisa hari dari sekarang hingga tanggal berakhir
+                                    $sisa_durasi = $sekarang->diff($tanggal_berakhir)->days . " hari"; // Sisa hari sewa
+                                }
+                            }
+
+                            echo "<tr>";
+                            echo "<td class='text-center'>" . $no++ . "</td>";
+                            echo "<td class='text-center'>" . $row['nama_user'] . "</td>";
+                            echo "<td class='text-center'><a href='https://wa.me/" . preg_replace('/[^0-9]/', '', $row['no_telp_user']) . "' target='_blank'>" . $row['no_telp_user'] . "</a></td>";
+                            echo "<td class='text-center'>" . $row['merk_mobil'] . "</td>";
+                            echo "<td class='text-center'>" . str_replace('_', ' ', $row['durasi']) . "</td>";
+                            echo "<td class='text-center'>" . $row['tanggal_rental_mulai'] . "</td>";
+                            echo "<td class='text-center'>" . $row['tanggal_rental_berakhir'] . "</td>";
+
+                            // Menambahkan kelas text-danger untuk status terlambat atau belum mengembalikan
+                            if ($status_sewa == "belum mengembalikan" || strpos($sisa_durasi, "Terlambat") !== false) {
+                                $sisa_durasi = "<span class='text-danger'>" . $sisa_durasi . "</span>";
+                                $status_sewa = "<span class='text-danger'>" . $status_sewa . "</span>";
+                            }
+
+                            echo "<td class='text-center'>" . $sisa_durasi . "</td>";
+
+                            // Menghapus karakter yang tidak diinginkan seperti spasi atau koma
+                            $harga = preg_replace("/[^0-9]/", "", $row['total_harga']); // Menghapus semua karakter selain angka
+                            echo "<td>Rp. " . number_format(intval($harga), 0, ',', '.') . "</td>";
+
+                            echo "<td class='text-center'><a href='" . $row['bukti_pembayaran'] . "' target='_blank'>Lihat Bukti</a></td>";
+                            echo "<td class='text-center'><a href='" . $row['bukti_serah_terima'] . "' target='_blank'>Lihat Bukti</a></td>";
+                            echo "<td class='text-center'>" . $status_sewa . "</td>";
+
+                            if ($status_sewa == 'berjalan' || $status_sewa == 'belum mengembalikan' || strpos($sisa_durasi, 'Terlambat') !== false) {
+    echo "<td class='text-center'><button class='btn btn-success' onclick='selesaikanSewa(" . $row['id_reservation'] . ")'>Selesaikan Masa Sewa</button></td>";
+} else {
+    echo "<td class='text-center'>-</td>";
+}
+
+
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='13' class='text-center'>Tidak ada data penyewa</td></tr>";
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+
+
+
+
+
+
+
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; AkastraRent 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+<!-- delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin menghapus testimonial ini?
+            </div>
+            <div class="modal-footer">
+                <form action="delete-testimonial.php" method="POST">
+                    <input type="hidden" name="id_testimoni" id="deleteId">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pemberitahuan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin keluar?
+            </div>
+            <div class="modal-footer">
+                <!-- Tombol Logout -->
+                <form action="logout.php" method="POST">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+    <script>
+        
+        function setImage(imageUrl) {
+        document.getElementById('fullImage').src = imageUrl;
+    }
+    </script>
+
+<script>
+    // Mengisi nilai ID testimonial ke dalam input hidden saat tombol delete diklik
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Tombol yang diklik
+        var idTestimoni = button.data('id'); // Ambil data-id dari tombol
+        var modal = $(this);
+        modal.find('#deleteId').val(idTestimoni); // Isi input hidden dengan id_testimoni
+    });
+</script>
+
+<script>
+    // Fungsi untuk menangani klik tombol "Selesaikan Masa Sewa"
+    function selesaikanSewa(reservationId) {
+        if (confirm("Apakah Anda yakin ingin menyelesaikan masa sewa ini?")) {
+            // Mengirimkan ID reservasi ke server menggunakan AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "selesaikan_sewa.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Menampilkan respon dari server (misalnya status pembaruan)
+                    alert(xhr.responseText);
+                    // Reload halaman untuk memperbarui data
+                    location.reload();
+                }
+            };
+            xhr.send("id_reservation=" + reservationId);
+        }
+    }
+</script>
+
+
+</body>
+
+</html>

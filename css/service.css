@@ -1,0 +1,547 @@
+    /********** Template CSS **********/
+    :root {
+        --primary: #D81324;
+        --secondary: #0B2154;
+        --light: #F2F2F2;
+        --dark: #111111;
+    }
+
+    .fw-medium {
+        font-weight: 600 !important;
+    }
+
+
+
+
+    /*** Spinner ***/
+    #spinner {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .5s ease-out, visibility 0s linear .5s;
+        z-index: 99999;
+    }
+
+    #spinner.show {
+        transition: opacity .5s ease-out, visibility 0s linear 0s;
+        visibility: visible;
+        opacity: 1;
+    }
+
+
+
+
+    /*** Navbar ***/
+    /*** Navbar Logo ***/
+    .logo-navbar {
+        height: 50px; /* Atur tinggi logo */
+        width: auto;
+        max-height: 100%; /* Pastikan gambar tidak melebihi tinggi kontainer */
+    }
+
+    .navbar-brand {
+        padding: 0; /* Hapus padding ekstra di sekitar logo */
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
+        .logo-navbar {
+            height: 40px; /* Kurangi tinggi logo pada layar yang lebih kecil */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .logo-navbar {
+            height: 35px; /* Kurangi lagi untuk layar yang sangat kecil */
+        }
+    }
+
+    /*** Navbar ***/
+    .navbar .dropdown-toggle::after {
+        border: none;
+        content: "\f107";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        vertical-align: middle;
+        margin-left: 8px;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+        margin-right: 30px;
+        padding: 25px 0;
+        color: #FFFFFF;
+        font-size: 15px;
+        text-transform: uppercase;
+        outline: none;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link.active {
+        color: var(--primary);
+    }
+
+    @media (max-width: 991.98px) {
+        .navbar-light .navbar-nav .nav-link {
+            margin-right: 0;
+            padding: 10px 0;
+        }
+
+        .navbar-light .navbar-nav {
+            border-top: 1px solid #EEEEEE;
+        }
+    }
+
+    .navbar-light .navbar-brand,
+    .navbar-light a.btn {
+        height: 75px;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+        color: var(--dark);
+        font-weight: 500;
+    }
+
+    .navbar-light.sticky-top {
+        top: -100px;
+        transition: .5s;
+    }
+
+    /* Untuk menu di layar kecil */
+    @media (max-width: 991.98px) {
+        .navbar-light .navbar-nav {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            flex-direction: column; /* Mengatur item menjadi kolom */
+            text-align: center;
+        }
+
+        .navbar-light .navbar-nav .nav-item {
+            margin: 10px 0; /* Memberikan jarak antar item menu */
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            padding: 10px 15px;
+        }
+
+        .navbar-toggler {
+            margin-left: auto; /* Menjaga posisi tombol hamburger berada di sisi kanan */
+        }
+
+        .navbar-light .navbar-nav .nav-link.active {
+            color: var(--primary);
+        }
+    }
+
+    /* Navbar behavior when sticky */
+    .navbar-light.sticky-top {
+        top: -100px;
+        transition: .5s;
+    }
+
+    @media (min-width: 992px) {
+        .navbar .nav-item .dropdown-menu {
+            display: block;
+            border: none;
+            margin-top: 0;
+            top: 150%;
+            opacity: 0;
+            visibility: hidden;
+            transition: .5s;
+        }
+
+        .navbar .nav-item:hover .dropdown-menu {
+            top: 100%;
+            visibility: visible;
+            transition: .5s;
+            opacity: 1;
+        }
+    }
+
+    .page-header {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .page-header-inner {
+        background: rgba(0, 0, 0, .7);
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: var(--light);
+    }
+
+    /*page header */
+    .page-header {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .page-header-inner {
+        background: rgba(0, 0, 0, .7);
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: var(--light);
+    }
+
+
+    /*** Service ***/
+    .service .nav .nav-link {
+        background: var(--light);
+        transition: .5s;
+    }
+
+    .service .nav .nav-link.active {
+        background: var(--primary);
+    }
+
+    .service .nav .nav-link.active h4 {
+        color: #FFFFFF !important;
+    }
+
+
+    /* CSS untuk layout dan efek gambar */
+    .service-item {
+        position: relative;
+        overflow: hidden;
+        display: inline-block; /* Untuk menampilkan item gambar secara horisontal */
+    }
+
+    /* Gambar akan membesar sedikit saat hover */
+    .service-item img {
+        transition: transform 0.3s ease-in-out;
+        width: 100%; /* Pastikan gambar responsif */
+        height: auto; /* Menjaga proporsi gambar */
+    }
+
+    /* Efek saat hover - Membesarkan gambar */
+    .service-item:hover img {
+        transform: scale(1.1); /* Gambar akan sedikit membesar saat hover */
+    }
+
+    /* Overlay yang muncul saat hover */
+    .service-overlay {
+        position: absolute;
+        top: 0; /* Menyesuaikan posisi atas overlay ke atas gambar */
+        left: 0; /* Menyesuaikan posisi kiri overlay ke kiri gambar */
+        width: 100%; /* Pastikan overlay menutupi lebar gambar */
+        height: 100%; /* Pastikan overlay menutupi tinggi gambar */
+        background-color: rgba(0, 0, 0, 0.7); /* Latar belakang hitam dengan opacity */
+        color: white; /* Teks putih */
+        display: flex;
+        align-items: center; /* Untuk menempatkan teks di tengah */
+        justify-content: center; /* Untuk menempatkan teks di tengah */
+        padding: 10px;
+        text-align: center;
+        visibility: hidden; /* Sembunyikan overlay */
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out; /* Efek transisi untuk munculnya overlay */
+    }
+
+    /* Tampilkan overlay saat hover */
+    .service-item:hover .service-overlay {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Geser tulisan sedikit ke bawah saat hover */
+    .service-item:hover .service-overlay h5 {
+        margin-top: 20px; /* Menambahkan margin atas untuk menggeser teks ke bawah */
+    }
+
+    /* Pastikan seluruh teks di dalam overlay berwarna putih */
+    .service-overlay h5,
+    .service-overlay p {
+        color: white !important; /* Memaksa semua teks di dalam overlay untuk menjadi putih */
+    }
+
+    /* Responsivitas untuk perangkat dengan layar lebih kecil */
+    @media (max-width: 767px) {
+        .service-item {
+            margin-bottom: 15px; /* Memberikan jarak antara gambar pada perangkat mobile */
+        }
+
+        .service-overlay h5 {
+            font-size: 16px; /* Mengurangi ukuran teks pada overlay untuk layar kecil */
+        }
+    }
+
+    /* Responsivitas untuk tablet dan perangkat lebih besar */
+    @media (min-width: 768px) and (max-width: 991px) {
+        .service-item {
+            margin-bottom: 20px; /* Memberikan jarak antara gambar */
+        }
+
+        .service-overlay h5 {
+            font-size: 18px; /* Mengatur ukuran teks agar sesuai dengan ukuran tablet */
+        }
+    }
+
+    /* Responsif untuk desktop */
+    @media (min-width: 992px) {
+        .service-item {
+            margin-bottom: 30px; /* Memberikan jarak antar gambar */
+        }
+
+        .service-overlay h5 {
+            font-size: 20px; /* Ukuran teks lebih besar pada layar besar */
+        }
+    }
+
+
+
+    /* Styling for table headers to be red */
+    .table th {
+        background-color: #D81324;
+        color: white;
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    /* Remove background color change on hover */
+    .table th:hover {
+        background-color: #D81324; /* Keep background red when hovering */
+    }
+
+    /* Responsive Table */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto;
+    }
+
+    .table th, .table td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    /* Styling for table on small screens */
+    @media (max-width: 767px) {
+        .table th, .table td {
+            font-size: 14px; /* Increase font size for mobile */
+            padding: 15px;   /* Increase padding for better readability */
+        }
+        
+        /* Styling for buttons on small screens */
+        .btn-group .btn {
+            width: 48%; /* Make each button take up 48% of the width */
+            margin-bottom: 10px; /* Add bottom margin to separate buttons */
+            font-size: 12px; /* Reduce font size of buttons */
+            padding: 5px 10px; /* Reduce padding of buttons */
+        }
+
+        /* Ensure search box is full width on small screens */
+        .search-box input {
+            width: 100%;
+        }
+    }
+
+    /* Styling for button container */
+    .btn-group {
+        display: flex;
+        flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        gap: 10px; /* Add gap between buttons */
+    }
+
+    /* For larger screens */
+    @media (min-width: 768px) {
+        .btn-group .btn {
+            width: auto; /* Allow buttons to have their default width */
+            font-size: 14px; /* Set a larger font size for normal screens */
+            padding: 10px 20px; /* Add normal padding for larger screens */
+        }
+
+        /* Styling for the search box */
+        .search-box input {
+            width: 100%; /* Search box takes up full width in normal screens */
+        }
+    }
+
+    /* Styling untuk search box */
+    .search-box {
+        position: relative;
+    }
+
+    /* Styling untuk input search */
+    .search-box input {
+        width: 100%;
+        padding: 10px 40px 10px 30px; /* Tambahkan padding untuk memberi ruang pada ikon */
+        font-size: 14px;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+    }
+
+    /* Styling untuk ikon search */
+    .search-box i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%); /* Posisi ikon di tengah secara vertikal */
+        font-size: 18px;
+        color: #888; /* Warna ikon */
+    }
+
+    /* Styling untuk link di kolom spesifikasi */
+    .spec-link {
+        text-decoration: underline; /* Garis bawah muncul saat hover */
+        color: #D81324; /* Warna biru untuk link */
+    }
+
+    /* Hover effect untuk link */
+    .spec-link:hover {
+        text-decoration: underline; /* Garis bawah muncul saat hover */
+        color: #000; /* Warna biru lebih gelap saat hover */
+    }
+
+    /* Styling untuk button normal */
+    .btn {
+        background-color: #edebeb; /* Background abu-abu */
+        color: black; /* Teks hitam */
+        border: 1px solid #ddd; /* Border abu-abu */
+        border-radius: 0px; /* Lengkungan border button */
+        transition: background-color 0.3s; /* Efek transisi untuk background */
+    }
+
+    /* Hover effect untuk button */
+    .btn:hover {
+        background-color: #D81324; /* Background merah */
+        color: white; /* Teks menjadi putih saat hover */
+    }
+
+    /*** Footer ***/
+.footer {
+    background: linear-gradient(rgba(0, 0, 0, .9), rgba(0, 0, 0, .9)), url(../img/carousel-bg-1.jpg) center center no-repeat;
+    background-size: cover;
+}
+
+.footer .btn.btn-social {
+    margin-right: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    background-color: #fff; /* Latar belakang putih */
+    border: 1px solid #000; /* Border hitam */
+    border-radius: 35px;
+    transition: .3s;
+}
+
+.footer .btn.btn-social i {
+    color: #000; /* Logo hitam */
+}
+
+.footer .btn.btn-social:hover {
+    color: #fff; /* Logo putih saat hover */
+    background-color: #000; /* Latar belakang hitam saat hover */
+    border-color: #f00; /* Border merah saat hover */
+}
+
+.footer .btn.btn-social:hover i {
+    color: #f00; /* Logo merah saat hover */
+}
+
+.footer .btn.btn-link {
+    display: block;
+    margin-bottom: 5px;
+    padding: 0;
+    text-align: left;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: normal;
+    text-transform: capitalize;
+    transition: .3s;
+}
+
+.footer .btn.btn-link::before {
+    position: relative;
+    content: "\f105";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.footer .btn.btn-link:hover {
+    letter-spacing: 1px;
+    box-shadow: none;
+}
+
+.footer .copyright {
+    padding: 25px 0;
+    font-size: 15px;
+    border-top: 1px solid rgba(256, 256, 256, .1);
+}
+
+.footer .copyright a {
+    color: var(--light);
+}
+
+.footer .footer-menu a {
+    margin-right: 15px;
+    padding-right: 15px;
+    border-right: 1px solid rgba(255, 255, 255, .3);
+}
+
+.footer .footer-menu a:last-child {
+    margin-right: 0;
+    padding-right: 0;
+    border-right: none;
+}
+
+
+/* Styling untuk button "BOOK NOW" */
+.btn-book-now {
+    background-color: #D81324; /* Warna latar belakang merah */
+    color: white; /* Warna teks putih */
+    border: 1px solid #D81324; /* Border merah */
+    border-radius: 0px; /* Lengkungan border yang lebih besar */
+    transition: background-color 0.3s; /* Efek transisi untuk background */
+}
+
+/* Hover effect untuk button "BOOK NOW" */
+.btn-book-now:hover {
+    background-color: #a10e1b; /* Warna latar belakang saat hover lebih gelap */
+    color: white; /* Teks tetap putih saat hover */
+}
+
+/* Active state (saat tombol diklik) */
+.btn-book-now:active {
+    background-color: #a10e1b; /* Warna latar belakang saat tombol diklik */
+    color: white; /* Teks tetap putih saat aktif */
+}
+
+
+/* CSS untuk tombol aktif */
+.btn.active {
+    background-color: red;
+    color: white;
+}
+
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.show {
+    display: block;
+}
+
+
+.thumbnail {
+        width: 50px;
+        height: auto;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .thumbnail:hover {
+        transform: scale(1.1);
+    }
