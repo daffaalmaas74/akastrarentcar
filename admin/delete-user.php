@@ -7,7 +7,8 @@ if (!isset($_SESSION['admin_id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_user'])) {
     // Koneksi ke database
-    $conn = new mysqli("localhost", "root", "", "akastrarentcar");
+    $conn = new mysqli("localhost", "root", "", "akastrarentcar", 3307);
+
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
